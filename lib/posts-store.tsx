@@ -1,41 +1,156 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
-import { Post, PostStatus, SEED_POSTS } from "./types";
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
+import { Post, PostStatus } from "./types";
+import {
+  fetchArticles,
+  createArticleApi,
+  updateArticleApi,
+} from "./api";
+import { Toast } from "@/components/ui/toast";
 
 interface PostsContextValue {
   posts: Post[];
+  loading: boolean;
+  error: string | null;
+  toast: { message: string; type: "success" | "error" } | null;
+  showToast: (message: string, type?: "success" | "error") => void;
+  reload: () => Promise<void>;
   getById: (id: number) => Post | undefined;
-  moveToTrash: (id: number) => void;
-  savePost: (id: number, data: Omit<Post, "id" | "status">, status: PostStatus) => void;
-  createPost: (data: Omit<Post, "id" | "status">, status: PostStatus) => void;
+  moveToTrash: (id: number) => Promise<boolean>;
+  savePost: (
+    id: number,
+    data: Pick<Post, "title" | "content" | "category">,
+    status: PostStatus
+  ) => Promise<{ success: boolean; errors?: Record<string, string[]> }>;
+  createPost: (
+    data: Pick<Post, "title" | "content" | "category">,
+    status: PostStatus
+  ) => Promise<{ success: boolean; errors?: Record<string, string[]> }>;
 }
 
 const PostsContext = createContext<PostsContextValue | null>(null);
 
 export function PostsProvider({ children }: { children: ReactNode }) {
-  const [posts, setPosts] = useState<Post[]>(SEED_POSTS);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
+  const showToast = useCallback((message: string, type: "success" | "error" = "success") => {
+    setToast({ message, type });
+    setTimeout(() => {
+      setToast(null);
+    }, 4000);
+  }, []);
+
+  const loadPosts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await fetchArticles(1000, 0);
+      setPosts(data);
+    } catch (err: any) {
+      console.error("API fetch error:", err);
+      setError(err?.message || "Gagal terhubung ke API backend.");
+      setPosts([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadPosts();
+  }, [loadPosts]);
 
   const getById = (id: number) => posts.find((p) => p.id === id);
 
-  const moveToTrash = (id: number) => {
-    setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, status: "trashed" } : p)));
+  const moveToTrash = async (id: number) => {
+    try {
+      const result = await updateArticleApi(id, { status: "trashed" });
+      if (result.success) {
+        await loadPosts();
+        showToast("Artikel berhasil dipindahkan ke sampah!", "success");
+        return true;
+      }
+      showToast("Gagal memindahkan artikel ke sampah", "error");
+      return false;
+    } catch (e: any) {
+      showToast("Gagal terhubung ke API backend", "error");
+      return false;
+    }
   };
 
-  const savePost = (id: number, data: Omit<Post, "id" | "status">, status: PostStatus) => {
-    setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, ...data, status } : p)));
+  const savePost = async (
+    id: number,
+    data: Pick<Post, "title" | "content" | "category">,
+    status: PostStatus
+  ) => {
+    try {
+      const result = await updateArticleApi(id, { ...data, status });
+      if (result.success) {
+        await loadPosts();
+        showToast(
+          status === "published"
+            ? "Artikel berhasil dipublikasikan!"
+            : "Artikel berhasil disimpan sebagai draft!",
+          "success"
+        );
+        return { success: true };
+      }
+      showToast("Gagal menyimpan artikel. Periksa input data.", "error");
+      return { success: false, errors: result.errors };
+    } catch (e: any) {
+      showToast("Gagal terhubung ke API backend", "error");
+      return { success: false, errors: { server: ["Tidak dapat terhubung ke server."] } };
+    }
   };
 
-  const createPost = (data: Omit<Post, "id" | "status">, status: PostStatus) => {
-    setPosts((prev) => {
-      const nextId = Math.max(0, ...prev.map((p) => p.id)) + 1;
-      return [{ id: nextId, ...data, status }, ...prev];
-    });
+  const createPost = async (
+    data: Pick<Post, "title" | "content" | "category">,
+    status: PostStatus
+  ) => {
+    try {
+      const result = await createArticleApi(data, status);
+      if (result.success) {
+        await loadPosts();
+        showToast(
+          status === "published"
+            ? "Artikel berhasil dipublikasikan!"
+            : "Artikel berhasil disimpan sebagai draft!",
+          "success"
+        );
+        return { success: true };
+      }
+      showToast("Gagal membuat artikel baru. Periksa input data.", "error");
+      return { success: false, errors: result.errors };
+    } catch (e: any) {
+      showToast("Gagal terhubung ke API backend", "error");
+      return { success: false, errors: { server: ["Tidak dapat terhubung ke server."] } };
+    }
   };
 
   return (
-    <PostsContext.Provider value={{ posts, getById, moveToTrash, savePost, createPost }}>
+    <PostsContext.Provider
+      value={{
+        posts,
+        loading,
+        error,
+        toast,
+        showToast,
+        reload: loadPosts,
+        getById,
+        moveToTrash,
+        savePost,
+        createPost,
+      }}
+    >
       {children}
+      <Toast
+        message={toast?.message || null}
+        type={toast?.type}
+        onClose={() => setToast(null)}
+      />
     </PostsContext.Provider>
   );
 }
