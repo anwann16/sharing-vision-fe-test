@@ -1,26 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap");
+
 @import "tailwindcss";
 
+@theme {
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui;
+  --color-background: #F5F3EC;
+  --color-foreground: #221F19;
+  --color-border: #DDD8C9;
+  --color-muted: #F0EDE2;
+  --color-muted-foreground: #7A7566;
+  --color-card: #FBFAF6;
+  --color-primary: #2F6F5E;
+  --color-primary-hover: #255A4C;
+  --color-primary-foreground: #FBFAF6;
+  --color-destructive: #B5493D;
+  --color-accent: #EAE6DA;
+  --radius: 2px;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: "Source Serif 4";
+  --font-sans: "Source Sans 3";
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f3ec;
+  color: #221f19;
+  font-family: var(--font-sans);
 }
