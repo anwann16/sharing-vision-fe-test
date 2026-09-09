@@ -9,28 +9,39 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ["var(--font-serif)", "Georgia", "serif"],
-        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui"],
+        sans: ["var(--font-sans)", "Plus Jakarta Sans", "Inter", "sans-serif"],
+        serif: ["var(--font-serif)", "Plus Jakarta Sans", "sans-serif"],
       },
       colors: {
-        background: "#F5F3EC",
-        foreground: "#221F19",
-        border: "#DDD8C9",
+        background: "#F8FAFC",
+        foreground: "#0F172A",
+        border: "#E2E8F0",
         muted: {
-          DEFAULT: "#F0EDE2",
-          foreground: "#7A7566",
+          DEFAULT: "#F1F5F9",
+          foreground: "#64748B",
         },
-        card: "#FBFAF6",
+        card: "#FFFFFF",
         primary: {
-          DEFAULT: "#2F6F5E",
-          hover: "#255A4C",
-          foreground: "#FBFAF6",
+          DEFAULT: "#4F46E5",
+          hover: "#4338CA",
+          foreground: "#FFFFFF",
         },
-        destructive: "#B5493D",
-        accent: "#EAE6DA",
+        destructive: {
+          DEFAULT: "#EF4444",
+          foreground: "#FFFFFF",
+        },
+        accent: {
+          DEFAULT: "#EEF2FF",
+          foreground: "#4338CA",
+        },
+      },
+      boxShadow: {
+        subtle: "0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04)",
+        card: "0 4px 6px -1px rgb(0 0 0 / 0.03), 0 2px 4px -2px rgb(0 0 0 / 0.03)",
+        glow: "0 0 20px -5px rgba(79, 70, 229, 0.3)",
       },
       borderRadius: {
-        DEFAULT: "2px",
+        DEFAULT: "10px",
       },
     },
   },

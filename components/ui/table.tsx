@@ -3,28 +3,28 @@ import { cn } from "@/lib/utils";
 
 export function Table({ className, ...props }: HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="overflow-hidden rounded border border-border bg-card">
-      <table className={cn("w-full text-left text-sm", className)} {...props} />
+    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm shadow-slate-200/50">
+      <table className={cn("w-full text-left text-sm border-collapse", className)} {...props} />
     </div>
   );
 }
 
 export function TableHead({ className, ...props }: HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead className={cn("bg-muted text-muted-foreground", className)} {...props} />;
+  return <thead className={cn("bg-slate-50/80 text-slate-500 uppercase tracking-wider text-xs font-bold border-b border-slate-200/80", className)} {...props} />;
 }
 
 export function TableBody(props: HTMLAttributes<HTMLTableSectionElement>) {
-  return <tbody {...props} />;
+  return <tbody className="divide-y divide-slate-100" {...props} />;
 }
 
 export function TableRow({ className, ...props }: HTMLAttributes<HTMLTableRowElement>) {
-  return <tr className={cn("border-t border-accent first:border-t-0", className)} {...props} />;
+  return <tr className={cn("transition-colors hover:bg-indigo-50/30 group", className)} {...props} />;
 }
 
 export function TableTh({ className, ...props }: ThHTMLAttributes<HTMLTableCellElement>) {
-  return <th className={cn("px-4 py-2.5 font-medium", className)} {...props} />;
+  return <th className={cn("px-6 py-4 font-semibold text-slate-600", className)} {...props} />;
 }
 
 export function TableTd({ className, ...props }: TdHTMLAttributes<HTMLTableCellElement>) {
-  return <td className={cn("px-4 py-3", className)} {...props} />;
+  return <td className={cn("px-6 py-4 text-slate-800 font-medium", className)} {...props} />;
 }

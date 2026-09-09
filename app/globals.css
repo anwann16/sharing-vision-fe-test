@@ -1,31 +1,60 @@
-@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
 
 @import "tailwindcss";
 
 @theme {
-  --font-serif: "Source Serif 4", Georgia, serif;
-  --font-sans: "Source Sans 3", ui-sans-serif, system-ui;
-  --color-background: #F5F3EC;
-  --color-foreground: #221F19;
-  --color-border: #DDD8C9;
-  --color-muted: #F0EDE2;
-  --color-muted-foreground: #7A7566;
-  --color-card: #FBFAF6;
-  --color-primary: #2F6F5E;
-  --color-primary-hover: #255A4C;
-  --color-primary-foreground: #FBFAF6;
-  --color-destructive: #B5493D;
-  --color-accent: #EAE6DA;
-  --radius: 2px;
+  --font-sans: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
+  --font-serif: "Plus Jakarta Sans", system-ui, sans-serif;
+  
+  --color-background: #F8FAFC;
+  --color-foreground: #0F172A;
+  --color-card: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-muted: #F1F5F9;
+  --color-muted-foreground: #64748B;
+  
+  --color-primary: #4F46E5;
+  --color-primary-hover: #4338CA;
+  --color-primary-foreground: #FFFFFF;
+  
+  --color-destructive: #EF4444;
+  --color-destructive-hover: #DC2626;
+  --color-accent: #EEF2FF;
+  --color-accent-foreground: #4338CA;
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
 }
 
 :root {
-  --font-serif: "Source Serif 4";
-  --font-sans: "Source Sans 3";
+  --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
+  --font-serif: "Plus Jakarta Sans", sans-serif;
 }
 
 body {
-  background: #f5f3ec;
-  color: #221f19;
+  background-color: #F8FAFC;
+  color: #0F172A;
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar for modern feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
 }
